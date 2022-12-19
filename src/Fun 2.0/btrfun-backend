@@ -1,0 +1,199 @@
+"""
+Sebastian Lindau-Skands, @lynet_101 | ©2022
+Fully featured hybrid graphics support for linux
+
+Endgoal:
+    Special features:
+    POi = prime offload in integrated mode |  Allows user to temporarily power on dGPU to run a specific program, and automatically power it down again, once program has finished | Not finished
+    EDi = External display in integrated | Allows dGPU to temporarily power on, when external display attached, and automatically power down when display detached | Not implemented
+    auto_offload = Automatically determines what apps should utilise prime-offload, and does so accordingly | Not implemented
+
+    Switching methods:
+    d2i = Dedicated to integrated | not seemless | not tested
+    i2d = Integrated to dedicated | not seemless | not tested
+    h2i = Hybrid to integrated | seemless | not tested
+    h2d = Hybrid to dedicated | not seemless | not tested
+    d2h = Dedicated to hybrid | not seemless | not tested
+    i2h = Integrated to hybrid | seemless | not tested
+
+    Modes:
+    Integrated = Turns dGPU off completely | Not tested
+
+    Hybrid = sets dGPU C-state as low as hardware will allow, until woken by 'prime-run', 'auto_offload', an external display, etc. Uses slightly more power than integrated, due to 
+    the gpu always having power, and always 'searching' for a wake up source | C-states and external displays not implemented
+
+    Dedicated = All rendering is handled by dGPU, and iGPU is only a hook, to ensure video on internal display | iGPU hook not implemented
+"""
+import os
+import time
+
+#temp var
+CALL=os.system()
+DECIRED = CALL('cat /var/fun/decired.mode')
+CURRENT = CALL('cat /var/fun/current.mode')
+D_PCI1 = "0000:01:00.0"
+D_PCI2 = "0000:01:00.1"
+DM = 'lightdm'
+APP = Null
+POi = 1
+auto_offload_enabled = 1
+EDi = 1
+
+def run():
+    if CURRENT == 'off':
+        if POi == 1:
+            switch.i2h()
+            CALL('prime.run', APP)
+            running = True
+            #wait for app to close
+            while running == True:
+                d_app_list = CALL("lsof /dev/nvidia* 2>/dev/null | awk '{ if (NR>1) pids[$2" "$1]++ } END { for (pid in pids) { print pid } }'") #Processes on nvidia GPU | Output format not known
+                if APP in d_app_list:
+                    time.sleep(5)
+                if APP not in d_app_list:
+                    if d_app_list != "":
+                        temp=input('some processes are still using dGPU. Killing them could cause issues.\nWhat would you like to do? (s)how, (k)ill, (a)bort')
+                        if temp == 's':
+                            print(d_app_list)
+                        if temp == 'k':
+                            CALL("killall", d_app_list) #As output format is unknown, loop function not implemented
+                            switch.h2i()
+                        if temp == 'a':
+                            print('dGPU still running. To deactivate, switch to integrated')
+                else:
+                    switch.h2i()
+                running = False
+        else:
+            print("Prime-offload in integrated mode disabled. To enable, go to etc/fun/config, and set 'POi' to 1")
+
+    if CURRENT == 'hybrid':
+        CALL('prime.run', APP)
+
+    if CURRENT == 'on':
+        CALL(APP)
+
+def ext_disp():
+    if CURRENT == 'off':
+        if EDi == 1:
+            switch.i2h()
+            #wait for ext_disp to disconnect
+            switch.h2i()
+        else:
+            print("External Displays in integrated are disabled. To enable go to /etc/fun/config and set 'dDisp-in-iM' to 1")
+    if CURRENT == 'hybrid':
+        #magic mumbo jumbo
+        print('placeholder')
+
+class switch():
+
+    """
+    d2i | Dedicated to integrated
+    i2d | Integrated to dedicated
+    h2i | Hybrid to integrated
+    h2d | Hybrid to dedicated
+    d2h | Dedicated to hybrid
+    i2h | Integrated to hybrid
+    """
+
+    def __init__(self):
+        global attach
+        global remove1
+        global remove2
+        global startdm
+        global stopdm
+        global load_driver
+        global unload_driver
+        global inteX
+        global dediX
+
+        attach=CALL('echo 1 > /sys/bus/pci/rescan')
+        remove1=CALL('echo 1 > /sys/bus/devices/', D_PCI1, '/remove')
+        remove2=CALL('echo 1 > /sys/bus/devices/', D_PCI2, '/remove')
+
+        stopdm=CALL('rc-service', DM, 'stop')
+        startdm=CALL('rc-service', DM, 'start')
+
+        load_driver=CALL('modprobe nvidia, nvidia_uvm, nvidia_drm, nvidia_modeset')
+        unload_driver=CALL('rmmod -f nvidia, nvidia_uvm, nvidia_drm, nvidia_modeset')
+
+        inteX=CALL('rm -r /etc/X11 && cp -r /etc/fun/X-integrated /etc/X11')
+        dediX=CALL('rm -r /etc/X11 && cp -r /etc/fun/X-dedicated /etc/X11')
+  
+    def switch_main(self):
+        if DECIRED == 'off':
+            if CURRENT == 'on':
+                self.d2i()
+            
+            if CURRENT == 'off':
+                print("dGPU already off, won't proceed")
+            
+            if CURRENT == 'hybrid':
+                self.h2i()
+            
+            else:
+                print('CURRENT graphics mode unknown...')
+        
+        if DECIRED == 'on':
+            if CURRENT == 'off':
+                self.i2d()
+            
+            if CURRENT == 'on':
+                print("dGPU already on, won't proceed")
+            
+            if CURRENT == 'hybrid':
+                self.h2d()
+            
+            else:
+                print('CURRENT graphics mode unknown...')
+        
+        if DECIRED == 'hybrid':
+            if CURRENT == 'on':
+                self.d2h()
+            
+            if CURRENT == 'hybrid':
+                print("Already Hybrid, won't proceed")
+            
+            if CURRENT == 'off':
+                self.i2h()
+            else:
+                print('CURRENT graphics mode unknown...')
+
+    def d2i(self):
+        stopdm
+        remove1
+        remove2
+        unload_driver
+        inteX
+        startdm
+
+    def h2i(self):
+        remove1
+        remove2
+        unload_driver
+
+    def i2d(self):
+        stopdm
+        attach
+        load_driver
+        dediX
+        startdm
+
+    def h2d(self):
+        stopdm
+        dediX
+        startdm
+
+    def d2h(self):
+        stopdm
+        inteX
+        startdm
+
+    def i2h(self):
+        attach
+        load_driver
+
+class auto_offload():
+    if auto_offload_enabled == 1:
+        """
+        If current mode is hybrid, heavy applications should be launched with 'prime-run' automatically
+        """

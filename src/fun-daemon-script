@@ -1,0 +1,68 @@
+#!/bin/dash
+#Sebastian Lindau-Skands ©2022
+#@lynet_101
+#Easy GPU management for hybrid graphic setups
+
+dGPU_pci='01:00' #Becomes redundant once autosearch implented
+dm='lightdm' #Display manager is only used to restart xorg... will become redundant once hotswap implemented
+act=$(cat /etc/fun/state) #The desired GPU mode
+act_prev=$(cat /etc/fun/prev_state) #The current GPU mode
+
+#Xorg is killed to spawn a new session on the dGPU [No eDP...yet]
+if [ $act = "On" ]
+then
+	if [ $act_prev = "Off" ]
+	then
+		rc-service $dm stop
+		echo 1 > /sys/bus/pci/rescan #re-activating dGPU pci module
+		modprobe nvidia nvidia_modeset nvidia_uvm nvidia_drm
+		rm -r /etc/X11 && cp -r /etc/X11.nvi/ /etc/X11
+		rc-service nvidia-persistenced start
+		rc-service $dm start
+	fi
+	if [ $act_prev = "Hybrid" ]
+	then
+		rc-service $dm stop
+		rm -r /etc/X11 && cp -r /etc/X11.nvi/ /etc/X11
+		rc-service $dm start
+	fi
+fi
+
+if [ $act = "Off" ]
+then
+	#Xorg is explecitly killed here, as dGPU is locked by it.
+	if [ $act_prev = "On" ]
+	then
+		rc-service $dm stop
+		killall Xorg
+		rmmod -f nvidia nvidia_modeset nvidia_uvm nvidia_drm
+		echo 1 > /sys/bus/pci/devices/0000:$dGPU_pci.0/remove #Deactivating dGPU pci graphics module
+		echo 1 > /sys/bus/pci/devices/0000:$dGPU_pci.1/remove #Deactivating dGPU pci sound module (may depend on specific carrier)
+		rm -r /etc/X11 && cp -r /etc/X11.inte/ /etc/X11
+		rc-service $dm start
+	fi
+	#If previous mode was Hybrid, switching can happen seemless, as dGPU has no depends. [Currently broken]
+	if [ $act_prev = "Hybrid" ]
+	then
+		echo 1 > /sys/bus/pci/devices/0000:$dGPU_pci.0/remove
+		echo 1 > /sys/bus/pci/devices/0000:$dGPU_pci.1/remove
+	fi
+fi
+
+if [ $act = "Hybrid" ]
+then
+	#If previous mode was "On", Xorg needs to be killed, to perform switching
+	if [ $act_prev = "On" ]
+	then
+		rc-service $dm stop
+		killall Xorg
+		rm -r /etc/X11 && cp -r /etc/X11.inte/ /etc/X11
+		rc-service $dm start
+	fi
+	#If previous mode was Off, switching can happen seemless. [Do DP-out... Yet]
+	if [ $act_prev = "Off" ]
+	then
+		echo 1 > /sys/bus/pci/rescan
+		modprobe nvidia nvidia_modeset nvidia_uvm nvidia_drm
+	fi
+fi

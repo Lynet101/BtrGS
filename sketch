@@ -1,0 +1,17 @@
+Daemon:
+	Should allow for driver loading, and then apply last known settings after acpid
+
+UI:
+	Should allow user to easily switch between modes, and then write current mode, as well as decired mode to memory file
+
+Switcher:
+	Should read from memory file, and determine ideal way to switch. Never unload drivers if possible, as this will speed up switching
+
+Compositor:
+	Should support GPU-hotswapping, and 'camouflage' itself as the current compositor 'eg. mutter for gnome'
+
+Extensions:
+	Should allow people to do 'Optimus-run' directly from the app-launch menu, instead of the terminal, when hybrid is enabled. | Ideally this would also allow for applaunch on integrated when dGPU is selevted
+
+Extra:
+	dGPU should be enabled at lowest power state when display connected to output, and immidiatly powered of when disconnected, when running in iGPU mode, to create a smooth experience for the end user | !!!Shall be toggable in settings file!!!
