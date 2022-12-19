@@ -1,13 +1,13 @@
 # BtrHGS
 Better Hybrid Graphic Support for Linux
-#################################################################################################################
+#############################################################################################
 !!!Early development!!!
 
 All code found in the current repo is highly experimental. The naming scheme is a bit random (I'll fix this very soon), and the code found is both messy, and buggy af (90% of it is probably broken xD)
 
 Once i start getting features functioning stably, I'll move the experiments to a sepperate branch, and leave main for stable releases
 
-#################################################################################################################
+#############################################################################################
 This project aims to bring propper support for hybrid graphics to linux.
 
 My goal is essentially to have a hybrid graphics system with all the same options as windows currently have, and more. Ideally the only mode a user would ever need (under normal usage) would be hybrid, and intelligent algorithm would take care of the rest
