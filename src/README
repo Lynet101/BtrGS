@@ -1,0 +1,2 @@
+This is the original script that got me started on this, utilizing pci calls to manage gpu power.
+While flawered in many, many ways, it serves as a good PoC (proof of concept) and a good starting point for me to continue my experiments
