@@ -1,2 +1,3 @@
 This is the original script that got me started on this, utilizing pci calls to manage gpu power.
 While flawered in many, many ways, it serves as a good PoC (proof of concept) and a good starting point for me to continue my experiments
+ps: I'm not a bash programmer, so yes the code is probably horrendous af... The final program will most likely be in python
