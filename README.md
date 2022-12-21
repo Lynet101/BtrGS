@@ -20,7 +20,7 @@ Release plan:
   
     - Switching between Integrated and Hybrid should be 100% seemless, without the need to restart X
     - Display-out should work in Hybrid mode
-    - Auto prime-offload in Hybrid mode, meaning applications that would benefit from the dGPU, automatically launches on it (like in windows)
+    - Auto prime-offload in Hybrid mode, meaning applications that would benefit from the dGPU, automatiCALLy launches on it (like in windows)
     - Manual prime-offload in integrated, if enabled in config (details follow)
     - Automatic enabling of 'Hybrid' when external display connected in 'Integrated', if configured in config (details follow, dunno if actually possible, but I'll be damned if i don't try
     
