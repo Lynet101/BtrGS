@@ -4,9 +4,8 @@ Better Hybrid Graphic Support for Linux
 
 !!!Early development!!!
 
-All code found in the current repo is highly experimental. The naming scheme is a bit random (I'll fix this very soon), and the code found is both messy, and buggy af (90% of it is probably broken xD)
+All code found in the current repo is highly experimental. The code found is both messy, and buggy af (90% of it is probably broken xD)
 
-Once i start getting features functioning stably, I'll move the experiments to a sepperate branch, and leave main for stable releases
 
 #############################################################################################
 
