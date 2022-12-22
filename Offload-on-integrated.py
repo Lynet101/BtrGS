@@ -1,4 +1,3 @@
-import subprocess
 import time
 import threading
 from Switching import *
@@ -9,7 +8,7 @@ def start():
         if CALL('cat /var/BtrHGS/current.mode') == 'integrated':
             app=input('program to launch: ')
             i2h()
-            thread = threading.Thread(target=(CALL(f'prime-run {app}', shell=True)))#i clearly have no idea how multithreading works xD
+            thread = threading.Thread(target=(CALL(f'prime-run {app}', shell=True)))
             thread.start()
             check(app)
         else:
@@ -22,14 +21,13 @@ def start():
 def check(app):
     while running == True:
         time.sleep(1)
-        #var = re.sub("[b,',n,PID]", "", str(CALL("lsof /dev/nvidia* 2> /dev/null | awk '{print $2}'", shell=True))).replace("\\", " ")  
         try:
             app_pid=CALL(f'pidof {app}', shell=True)
             print(f'app running with pid {app_pid}')
         except:
             print('app not running')
             try:
-                CALL("lsof /dev/nvidia* | awk '{print $2}' | xargs -I {} kill {}", shell=True) #opera is weird
+                CALL("lsof /dev/nvidia* | awk '{print $2}' | xargs -I {} kill {}", shell=True) #procceses with more than one thread are... weird
                 if CALL("lsof /dev/nvidia* ") == "":
                     h2i()
                     running = False

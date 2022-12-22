@@ -4,34 +4,16 @@ Fully featured hybrid graphics support for linux
 
 Endgoal:
     Special features:
-    POi = prime offload in integrated mode |  Allows user to temporarily power on dGPU to run a specific program, and automatiCALLy power it down again, once program has finished | Not finished
+    POi = prime offload in integrated mode |  Allows user to temporarily power on dGPU to run a specific program, and automatiCALLy power it down again, once program has finished | Finished | Not tested
     EDi = External display in integrated | Allows dGPU to temporarily power on, when external display attached, and automatiCALLy power down when display detached | Not implemented
     auto_offload = AutomatiCALLy determines what apps should utilise prime-offload, and does so accordingly | Not implemented
-
-    Switching methods:
-    d2i = Dedicated to integrated | not seemless | not tested
-    i2d = Integrated to dedicated | not seemless | not tested
-    h2i = Hybrid to integrated | seemless | not tested
-    h2d = Hybrid to dedicated | not seemless | not tested
-    d2h = Dedicated to hybrid | not seemless | not tested
-    i2h = Integrated to hybrid | seemless | not tested
-
-    Modes:
-    Integrated = Turns dGPU off completely | Not tested
-
-    Hybrid = sets dGPU C-state as low as hardware will allow, until woken by 'prime-run', 'auto_offload', an external display, etc. Uses slightly more power than integrated, due to 
-    the gpu always having power, and always 'searching' for a wake up source | C-states and external displays not implemented
-
-    Dedicated = All rendering is handled by dGPU, and iGPU is only a hook, to ensure video on internal display | iGPU hook not implemented
 """
-import os
 import subprocess
-import re
+import threading
 import time
 
 #temp var
-CALL=os.system
-CALLOUT=subprocess.check_output
+CALL=subprocess.check_output
 DECIRED = CALL('cat /var/fun/decired.mode')
 CURRENT = CALL('cat /var/fun/current.mode')
 D_PCI1 = "0000:01:00.0"
@@ -42,40 +24,45 @@ POi = 1
 auto_offload_enabled = 1
 EDi = 1
 
-def run():
-    if CURRENT == 'off':
-        if POi == 1:
-            switch.i2h()
-            CALL('prime.run', APP)
-            running = True
-            #wait for app to close
-            while running == True:
-                d_app_list = re.sub("[b, ']", "", re.sub('[0-9]', '', str(CALLOUT("lsof /dev/nvidia* 2>/dev/null | awk '{ if (NR>1) pids[$2" "$1]++ } END { for (pid in pids) { print pid } }'", shell=True)))).replace("\\n", "\n") #Processes on nvidia GPU | Output format not known
-                if APP in d_app_list:
-                    time.sleep(5)
-                if APP not in d_app_list:
-                    if d_app_list != "":
-                        temp=input('some processes are still using dGPU. Killing them could cause issues.\nWhat would you like to do? (s)how, (k)ill, (a)bort')
-                        if temp == 's':
-                            print(d_app_list)
-                        if temp == 'k':
-                            CALL("killall", d_app_list) #As output format is unknown, loop function not implemented
-                            switch.h2i()
-                        if temp == 'a':
-                            print('dGPU still running. To deactivate, switch to integrated')
-                else:
-                    switch.h2i()
-                running = False
-        else:
-            print("Prime-offload in integrated mode disabled. To enable, go to etc/fun/config, and set 'POi' to 1")
+class POI():
+    #Done | Not tested
+    def start():
+        try:
+            if CALL('cat /var/BtrHGS/current.mode') == 'integrated':
+                app=input('program to launch: ')
+                i2h()
+                thread = threading.Thread(target=(CALL(f'prime-run {app}', shell=True)))
+                thread.start()
+                check(app)
+            else:
+                print('This feature is only available when running in integrated')
+        except:
+            print('failed to read current state')
 
-    if CURRENT == 'hybrid':
-        CALL('prime.run', APP)
 
-    if CURRENT == 'on':
-        CALL(APP)
+    #Done | Not tested
+    def check(app):
+        while running == True:
+            time.sleep(1)
+            try:
+                app_pid=CALL(f'pidof {app}', shell=True)
+                print(f'app running with pid {app_pid}')
+            except:
+                print('app not running')
+                try:
+                    CALL("lsof /dev/nvidia* | awk '{print $2}' | xargs -I {} kill {}", shell=True) #procceses with more than one thread are... weird
+                    if CALL("lsof /dev/nvidia* ") == "":
+                        h2i()
+                        running = False
+                    else:
+                        print('failed to kill remaining processes.... Aborting!')
+                        running = False
+                except:
+                    print('no processes found... continuing')
+                    h2i()
+                    running = False
 
-def ext_disp():
+class ext_disp():
     if CURRENT == 'off':
         if EDi == 1:
             switch.i2h()
@@ -88,41 +75,12 @@ def ext_disp():
         print('placeholder')
 
 class switch():
-
-    """
-    d2i | Dedicated to integrated
-    i2d | Integrated to dedicated
-    h2i | Hybrid to integrated
-    h2d | Hybrid to dedicated
-    d2h | Dedicated to hybrid
-    i2h | Integrated to hybrid
-    """
-
-    def __init__(self):
-        global attach
-        global remove1
-        global remove2
-        global startdm
-        global stopdm
-        global load_driver
-        global unload_driver
-        global inteX
-        global dediX
-
-        attach=CALL('echo 1 > /sys/bus/pci/rescan')
-        remove1=CALL('echo 1 > /sys/bus/devices/', D_PCI1, '/remove')
-        remove2=CALL('echo 1 > /sys/bus/devices/', D_PCI2, '/remove')
-
-        stopdm=CALL('rc-service', DM, 'stop')
-        startdm=CALL('rc-service', DM, 'start')
-
-        load_driver=CALL('modprobe nvidia, nvidia_uvm, nvidia_drm, nvidia_modeset')
-        unload_driver=CALL('rmmod -f nvidia, nvidia_uvm, nvidia_drm, nvidia_modeset')
-
-        inteX=CALL('rm -r /etc/X11 && cp -r /etc/fun/X-integrated /etc/X11')
-        dediX=CALL('rm -r /etc/X11 && cp -r /etc/fun/X-dedicated /etc/X11')
-  
+    #Done | Not tested
     def switch_main(self):
+
+        DECIRED = CALL('cat /var/BtrHGS/decired.mode')
+        CURRENT = CALL('cat /var/BtrHGS/current.mode')
+
         if DECIRED == 'off':
             if CURRENT == 'on':
                 self.d2i()
@@ -161,40 +119,126 @@ class switch():
             else:
                 print('CURRENT graphics mode unknown...')
 
-    def d2i(self):
-        stopdm
-        remove1
-        remove2
-        unload_driver
-        inteX
-        startdm
+    """
+    d2i | Dedicated to integrated
+    i2d | Integrated to dedicated
+    h2i | Hybrid to integrated
+    h2d | Hybrid to dedicated
+    d2h | Dedicated to hybrid
+    i2h | Integrated to hybrid
+    """
 
-    def h2i(self):
-        remove1
-        remove2
-        unload_driver
+    #Done | Not tested
+    def d2i():
+        try:
+            stopdm
+            try:
+                if CALL('lsof /dev/nvidia*') != "":
+                    kill_choice=input('processes are still running on dGPU... Disabling it will kill theese processes\ndo you want to proceed(y/n)?\n')
+                    if kill_choice == 'y':
+                        try:
+                            kill
+                            remove1
+                            remove2
+                            unload_driver   
+                        except:
+                            print('failed to kill processes, and unload dGPU')
+                            return
+                    elif kill_choice == 'n':
+                        print('please manually close the programs listed below, before continuing:')
+                        print(CALL('lsof /dev/nvidia*'))
+                        return
+                    else:
+                        print('unrecognised option!')
+                else:
+                    print('no processes are running... continuing')
+                    remove1
+                    remove2
+                    unload_driver
+            except:
+                print('Error when trying to get running processes\nAborting!')
+                return
+            inteX
+            startdm
+        except:
+            print('failed to switch')
 
-    def i2d(self):
-        stopdm
-        attach
-        load_driver
-        dediX
-        startdm
+    #Done | Seemless | Not tested
+    def h2i():
+        try:
+            if CALL('lsof /dev/nvidia*') != "":
+                kill_choice=input('processes are still running on dGPU... Disabling it will kill theese processes\ndo you want to proceed(y/n)?\n')
+                if kill_choice == 'y':
+                    try:
+                        kill
+                        remove1
+                        remove2
+                        unload_driver   
+                    except:
+                        print('failed to kill processes, and unload dGPU')
+                        return
+                elif kill_choice == 'n':
+                    print('please manually close the programs listed below, before continuing:')
+                    print(CALL('lsof /dev/nvidia*'))
+                    return
+                else:
+                    print('unrecognised option!')
+            else:
+                print('no processes are running... continuing')
+                remove1
+                remove2
+                unload_driver
+        except:
+            print('Error when trying to get running processes\nAborting!')
+            return
 
-    def h2d(self):
-        stopdm
-        dediX
-        startdm
+    #Done | Not tested
+    def i2d():
+        try:
+            stopdm
+            attach
+            if CALL('lsmod | grep nvi') != "":
+                print('drivers already loaded!')
+            else:
+                load_driver
+            dediX
+            startdm
+        except:
+            print('failed to switch')
+            return
 
-    def d2h(self):
-        stopdm
-        inteX
-        startdm
+    #Done | Not tested
+    def h2d():
+        try:
+            stopdm
+            dediX
+            startdm
+        except:
+            print('failed to switch')
+            return
 
-    def i2h(self):
-        attach
-        load_driver
+    #Done | Not tested
+    def d2h():
+        try:
+            stopdm
+            inteX
+            startdm
+        except:
+            print('failed to switch')
+            return
 
+    #Done | Seemless | Not tested
+    def i2h():
+        try:
+            attach
+            if CALL('lsmod | grep nvi') != "":
+                print('drivers already loaded!')
+            else:
+                load_driver
+        except:
+            print('failed to load dGPU')
+            return
+    
 class auto_offload():
     if auto_offload_enabled == 1:
         """

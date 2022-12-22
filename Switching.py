@@ -25,39 +25,39 @@ def switch_main(self):
 
     if DECIRED == 'off':
         if CURRENT == 'on':
-            self.d2i()
+            d2i()
         
         if CURRENT == 'off':
             print("dGPU already off, won't proceed")
         
         if CURRENT == 'hybrid':
-            self.h2i()
+            h2i()
         
         else:
             print('CURRENT graphics mode unknown...')
     
     if DECIRED == 'on':
         if CURRENT == 'off':
-            self.i2d()
+            i2d()
         
         if CURRENT == 'on':
             print("dGPU already on, won't proceed")
         
         if CURRENT == 'hybrid':
-            self.h2d()
+            h2d()
         
         else:
             print('CURRENT graphics mode unknown...')
     
     if DECIRED == 'hybrid':
         if CURRENT == 'on':
-            self.d2h()
+            d2h()
         
         if CURRENT == 'hybrid':
             print("Already Hybrid, won't proceed")
         
         if CURRENT == 'off':
-            self.i2h()
+            i2h()
         else:
             print('CURRENT graphics mode unknown...')
 
