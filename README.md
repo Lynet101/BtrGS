@@ -24,6 +24,7 @@ Release plan:
     - Battery level, and geo-location features. This would allow users to set GPU rules based on battery status & level, as well as there physical location. I can imagine many would use hybrid (or in the future dedicated) at home, so having the computer automatically switch, would just be a quality of life improvement.
     
   Major Release 2:
+  
     - I'm working on an idea for a set of custom drivers/plugins for Xorg. if succesfull, All running applications (including X-server) can be transfered seemless from 1 gpu to another*
     - with above mentioned technology all features in release 1 are going to be adapted, for an even more seemless process
     - Dedicated mode is also updated to be 100% seemless
