@@ -1,12 +1,12 @@
 # BtrHGS
 Better Hybrid Graphic Support for Linux
-#############################################################################################
+################################################################################
 
 !!!Early development!!!
 
 All code found in the current repo is highly experimental. Code found in 'BtrHGS Function Collection..." is just a collection of all the functions, for a quick way for me to see how all functions are gonna tie together. NOT MENT FOR EXECUTION EVER!
 
-#############################################################################################
+################################################################################
 
 This project aims to bring propper support for hybrid graphics to linux.
 
