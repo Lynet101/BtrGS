@@ -1,0 +1,30 @@
+To succesfully remove nvidia GPU
+	1. unload nvidia_drm and nvidia_uvm with modprobe
+	2. unbind nvidia from nvidia driver, with "echo "{PCI-Adress}" > /sys/bus/pci/devices/{PCI-Adress}/driver/unbind
+	3. remove nvidia card with "echo 1 > /sys/bus/pci/devices/{PCI-Adress}/remove
+	4. [Optional] reload nvidia_drm and nvidia_uvm
+
+To succesfully reactivate nvidia GPU
+	1. If not done before, reload nvidia_drm and nvidia_uvm now!
+	2. reload gpu with "echo 1 > /sys/bus/pci/rescan"
+
+
+Discoveries:
+	- When using the unbound method, it is possible to keep the nvidia and nvidia_modesetting driver loaded, when turning off GPU.
+	  This allows for Xorg to create a process on /dev/nvidiactl. Loading the nvidia_drm and nvidia_uvm drivers doesn't require the 
+	  presence of the GPU, and only requires the drivers to work, meaning the entire system can be set up to opencl, cuda and vulkan support
+	  without the actual card loaded.
+	
+	- nvidia_drm and nvidia_uvm needs to be unloaded the first time you toggle gpu off, after a reboot. This is presumably to break any hooks.
+
+	- deloading nvidia_drm and nvidia_uvm whilst Xorg is running, will crash.
+
+	- Furthermore, when gpu is started, after x is started, Xrandr is able to see gpu, but names it 'modesetting' like the internal. provideroutputsource can
+	  still be sat by id, but --auto unfortunately fails, and the result remains the same. You're able to see the displays, along side their info, and resolutions
+	  in eg. cinnamon settings, but not activate them ;[
+
+on the attached video there's 4 windows:
+	1. [Top left] My input shell. unbindall means unbinding the drivers, removeall means removing the pci devices and powering them down, and reload means reenabling everything
+	2. [Top right] LSPCI. Just shows that the card is actually powered on and off
+	3. [Bottom left] Xorg logs. Shows that Xorg sees the new card, but maybe sees it as an input device
+	4. [Bottom right] Dmesg. I shouldn't need to explain this...

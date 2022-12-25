@@ -1,12 +1,12 @@
 # BtrHGS
 Better Hybrid Graphic Support for Linux
-################################################################################
+#############################################################################################
 
 !!!Early development!!!
 
 All code found in the current repo is highly experimental. Code found in 'BtrHGS Function Collection..." is just a collection of all the functions, for a quick way for me to see how all functions are gonna tie together. NOT MENT FOR EXECUTION EVER!
 
-################################################################################
+#############################################################################################
 
 This project aims to bring propper support for hybrid graphics to linux.
 
@@ -24,7 +24,6 @@ Release plan:
     - Battery level, and geo-location features. This would allow users to set GPU rules based on battery status & level, as well as there physical location. I can imagine many would use hybrid (or in the future dedicated) at home, so having the computer automatically switch, would just be a quality of life improvement.
     
   Major Release 2:
-  
     - I'm working on an idea for a set of custom drivers/plugins for Xorg. if succesfull, All running applications (including X-server) can be transfered seemless from 1 gpu to another*
     - with above mentioned technology all features in release 1 are going to be adapted, for an even more seemless process
     - Dedicated mode is also updated to be 100% seemless
@@ -38,7 +37,6 @@ While I'll try my best to get things done asap, Major Release 1 and 2, might be 
 
 With the exact same reasoning I'm also gonna ask for your, the communitys, help. Bug patching is going to be an almost impossible job for me, so if you find a bug in the code, or the bug tracker, please try to patch it. I'll be more than happy to accept pull requests, knowing that for every one of them, this project gets a little better.
 
-################################################################################
 
 *The idea is to have a driver/plugin to spoof Xorg to send all render related data to a program of mine, which, in theory, should send the data to the decired GPU.
 Step 2 would then be to copy the vRAM from one gpu to another, before switching. Of course this comes with some limitations, but if it works, it should open the doors for all new possibilities.
