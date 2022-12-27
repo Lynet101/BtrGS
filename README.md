@@ -8,36 +8,26 @@ All code found in the current repo is highly experimental. Code found in 'BtrHGS
 
 ################################################################################
 
-This project aims to bring propper support for hybrid graphics to linux.
+Hybrid graphics have always been a pain in the *ss to work with on linux. Either the internal disp isn't working, or the external, and you constantly have to restart either x or your entire system.... Urgh!
 
-My goal is essentially to have a hybrid graphics system with all the same options as windows currently have, and more. Ideally the only mode a user would ever need (under normal usage) would be hybrid, and intelligent algorithm would take care of the rest
+Though it's not just linux. Yes linux is probably the most difficult (we have nvidia to thanks for that), but hybrid graphics on say windows, isn't exactly elegant either. 
 
-Release plan:
+The goal of this project is to attempt to come up with an elegant solution for this. Whilst some releases will happen, the goal of the project is not to create a product for the end user, but to discover and document the technique, so the community can create their own hybrid graphics systems, with the feautres they wish for
 
-  Major Release 1:
-  
-    - Switching between Integrated and Hybrid should be 100% seemless, without the need to restart X
-    - Display-out should work in Hybrid mode
-    - Auto prime-offload in Hybrid mode. Release 1 is likely to bring a configurable list under /etc, where user can specify programs, that should launch on dGPU, if available.
-    - Manual prime-offload in integrated, if enabled in config. This means that in integrated, dGPU can temporarily be turned on, to run a single program, and immidiately be killed by the daemon, once the process has terminated
-    - Automatic enabling of 'Hybrid' when external display connected in 'Integrated', if configured in config (details follow, dunno if actually possible, but I'll be damned if i don't try. This should again immidieatly kill the dGPU once displays are removed
-    - Battery level, and geo-location features. This would allow users to set GPU rules based on battery status & level, as well as there physical location. I can imagine many would use hybrid (or in the future dedicated) at home, so having the computer automatically switch, would just be a quality of life improvement.
-    
-  Major Release 2:
-    - I'm working on an idea for a set of custom drivers/plugins for Xorg. if succesfull, All running applications (including X-server) can be transfered seemless from 1 gpu to another*
-    - with above mentioned technology all features in release 1 are going to be adapted, for an even more seemless process
-    - Dedicated mode is also updated to be 100% seemless
-    - Custom C-state implementation in Hybrid mode, allowing for aggresive dynamic power management
-    (This release may not seem big, but trust me, switching x from running on iGPU to dGPU without restarting it, is going to be a challenge and a half)
-    
-Release schedule:
-Given the sheer size and complexity of the problem at hand, I'm gonna cut myself a little slack, and decide that I'll have no release schedule.
-I'm a high school student, meaning dependent on time at school, amount of homework, and demands from general social life, the amount of work i can put into this project will vary.
-While I'll try my best to get things done asap, Major Release 1 and 2, might be a long time apart.
+Currently i have worked out how to (without any processes in the picture) turn switch between integrated, hybrid and dedicated mode seemless. That also means that, if X is started in integrated, you can actually switch to hybrid without restarting x (just don't expect dispay out to work) and back again to integrated of course.
 
-With the exact same reasoning I'm also gonna ask for your, the communitys, help. Bug patching is going to be an almost impossible job for me, so if you find a bug in the code, or the bug tracker, please try to patch it. I'll be more than happy to accept pull requests, knowing that for every one of them, this project gets a little better.
+Now the big problem has, unfortunately, arrived. A technique needs to be developed to allow for the transfer of processes between GPUs. If this is succesfull, seemless switching would become 100% possible, and dare i say it? easy. It would allow you to take any running process, and transfer it to a different gpu, without interupting the process (other than possibly pausing it for a few milliseconds, but we'll talk a obout that later)
 
+--------------------------------------------------------------------------------
 
-*The idea is to have a driver/plugin to spoof Xorg to send all render related data to a program of mine, which, in theory, should send the data to the decired GPU.
-Step 2 would then be to copy the vRAM from one gpu to another, before switching. Of course this comes with some limitations, but if it works, it should open the doors for all new possibilities.
-A check should, however, be implemented to ensure that copying doesn't happen whilst something like a game is running, since that would be too much vRAM, and overflow into system ram would be imminent, causing a massive performance hit, and potential crash.
+This is just the current draft for a memory technique, that'll allow me to develop the rest of the system, and probably not the final memory solution, as it's slow and ineffecient AF;
+
+The current plan is to, when switching, create a copy of the vram, on the second gpu. After creating the copy, doing some magic mumbo jumbo, and after all processes are running on the new card, release the old cards vram, and power it down.
+
+Again, that is just for development, as there are.... Issues, to put it mildly. I mean just imagine a scenario, you're playing a game. It uses around 3GB of vram. Now you're switching to your iGPU (for whatever reason) without closing your game... Chances are your iGPU doesn't have 3GB of vram, meaning we have to overflow into regular ram, which is just terrible, and will most likely cause a crash.
+
+So let's all just agree, to not do that in the development face shall we? Only attempt this memory method, on lighter applications like a web-browser, whilst the rest of the methods for transferring apps between gpus are developed
+
+--------------------------------------------------------------------------------
+
+Lastly if you have any ideas/suggestions to how this could be achieved, please do open a issue. It would be great to hear from you! might also make a subreddit in the future, but I'm a high school student, so time isn't something a have a lot of
