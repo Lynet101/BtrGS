@@ -9,7 +9,7 @@ That is IF it's succesfull. I've read a lot of documentation online, and been un
 
 I'm gonna try my very best to bring this idea to reallity, and i strongly believe, that with the help of this great community, we can atleast get part of the way there. However i just have to make this disclaimer: I'm a high school student, with knowledge and experience in coding. I've worked for larger international corporations before, and developed things like AIs. Though I am in no way a 'professional', so don't expect miracles. Also, since I'm in highschool, I don't really have all the time in the world to look at this project. So from the beginning im gonna say; Given the complexity of the problem at hand, and given the current status of the team (that being a single, time constrained person) I won't make any promises for any releases. New documentation and releases will happen, whenever I've discovered something new, and had time to work with it proberly.
 
-If you wan't to contribute, head into 'indev' for more info
+If you wan't to contribute, please read CONTRIBUTING.md, and then head over to 'issues', 'discussions' and/or the 'indev' folder. Happy coding :)
 
 ---------------------------------------------------------------------------------------
 
