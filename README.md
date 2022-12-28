@@ -1,5 +1,4 @@
 # BtrHGS
---------------------------------------------------------------------------------------
 BtrHGS is a project that aims to bring Better Hybrid Graphics Support to linux.
 
 It takes a brand new approach to switching GPUs, by trying to 'move' processes between GPUs before switching, rather than relying on a restart of X or the system, to kill all processes before switching may happen.
@@ -18,5 +17,7 @@ As this is a bleeding edge project, a lot of documentation, and a lot of code sa
 The aim is to maintain as transparent as possible with what's going on, to allow people to, not only know where it's at, but also contribute to the project, and bring ideas, bug fixes, or just small tips on how you can do something smarter/easier/faster
 
 As this project is going to move memory around, and is most likely going to modify the kernel at some point, security should also be kept a high priority. Hince why i have 'Testers' 'Developmental-builds' and 'User-builds'. Anything not found in 'User-builds' are not tested proberly, and are likely to contain major security flaws that, if exploited, could lead to all sorts of issues like corruption, spying, etc.
+
+--------------------------------------------------------------------------------------
 
 Lastly, in an attempt to stay ahead of potential system-destroying bugs, i stronly encourage people to reflect over what they read in the project, and open issues whenever they've found a potential bug, that needs to be taken into acountanse to ensure that processes won't break, and data won't corrupt when moving gpus
