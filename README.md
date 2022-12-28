@@ -1,33 +1,22 @@
 # BtrHGS
-Better Hybrid Graphic Support for Linux
-################################################################################
+--------------------------------------------------------------------------------------
+BtrHGS is a project that aims to bring Better Hybrid Graphics Support to linux.
 
-!!!Early development!!!
+It takes a brand new approach to switching GPUs, by trying to 'move' processes between GPUs before switching, rather than relying on a restart of X or the system, to kill all processes before switching may happen.
 
-All code found in the current repo is highly experimental. Code found in 'BtrHGS Function Collection..." is just a collection of all the functions, for a quick way for me to see how all functions are gonna tie together. NOT MENT FOR EXECUTION EVER!
+This projects original intent is hybrid graphics systems on linux, but if succesfull this technology could be deployed any where from optimus-systems to data centers.
 
-################################################################################
+That is IF it's succesfull. I've read a lot of documentation online, and been unable to find a similar project, meaning what this project tries to accomplish is brand new and revolutionary, but also that it's going to be difficult af.
 
-Hybrid graphics have always been a pain in the *ss to work with on linux. Either the internal disp isn't working, or the external, and you constantly have to restart either x or your entire system.... Urgh!
+I'm gonna try my very best to bring this idea to reallity, and i strongly believe, that with the help of this great community, we can atleast get part of the way there. However i just have to make this disclaimer: I'm a high school student, with knowledge and experience in coding. I've worked for larger international corporations before, and developed things like AIs. Though I am in no way a 'professional', so don't expect miracles. Also, since I'm in highschool, I don't really have all the time in the world to look at this project. So from the beginning im gonna say; Given the complexity of the problem at hand, and given the current status of the team (that being a single, time constrained person) I won't make any promises for any releases. New documentation and releases will happen, whenever I've discovered something new, and had time to work with it proberly.
 
-Though it's not just linux. Yes linux is probably the most difficult (we have nvidia to thanks for that), but hybrid graphics on say windows, isn't exactly elegant either. 
+---------------------------------------------------------------------------------------
 
-The goal of this project is to attempt to come up with an elegant solution for this. Whilst some releases will happen, the goal of the project is not to create a product for the end user, but to discover and document the technique, so the community can create their own hybrid graphics systems, with the feautres they wish for
+I've devided the project up in folders, to try and make things a bit easier to navigate. In every folder there's a readme file, containing that folders structure
 
-Currently i have worked out how to (without any processes in the picture) turn switch between integrated, hybrid and dedicated mode seemless. That also means that, if X is started in integrated, you can actually switch to hybrid without restarting x (just don't expect dispay out to work) and back again to integrated of course.
+As this is a bleeding edge project, a lot of documentation, and a lot of code samples a going to be generated, by which only approx. 10% are likely to be used, so having a good archival structure has been important for me, to maintain transparency.
+The aim is to maintain as transparent as possible with what's going on, to allow people to, not only know where it's at, but also contribute to the project, and bring ideas, bug fixes, or just small tips on how you can do something smarter/easier/faster
 
-Now the big problem has, unfortunately, arrived. A technique needs to be developed to allow for the transfer of processes between GPUs. If this is succesfull, seemless switching would become 100% possible, and dare i say it? easy. It would allow you to take any running process, and transfer it to a different gpu, without interupting the process (other than possibly pausing it for a few milliseconds, but we'll talk a obout that later)
+As this project is going to move memory around, and is most likely going to modify the kernel at some point, security should also be kept a high priority. Hince why i have 'Testers' 'Developmental-builds' and 'User-builds'. Anything not found in 'User-builds' are not tested proberly, and are likely to contain major security flaws that, if exploited, could lead to all sorts of issues like corruption, spying, etc.
 
---------------------------------------------------------------------------------
-
-This is just the current draft for a memory technique, that'll allow me to develop the rest of the system, and probably not the final memory solution, as it's slow and ineffecient AF;
-
-The current plan is to, when switching, create a copy of the vram, on the second gpu. After creating the copy, doing some magic mumbo jumbo, and after all processes are running on the new card, release the old cards vram, and power it down.
-
-Again, that is just for development, as there are.... Issues, to put it mildly. I mean just imagine a scenario, you're playing a game. It uses around 3GB of vram. Now you're switching to your iGPU (for whatever reason) without closing your game... Chances are your iGPU doesn't have 3GB of vram, meaning we have to overflow into regular ram, which is just terrible, and will most likely cause a crash.
-
-So let's all just agree, to not do that in the development face shall we? Only attempt this memory method, on lighter applications like a web-browser, whilst the rest of the methods for transferring apps between gpus are developed
-
---------------------------------------------------------------------------------
-
-Lastly if you have any ideas/suggestions to how this could be achieved, please do open a issue. It would be great to hear from you! might also make a subreddit in the future, but I'm a high school student, so time isn't something a have a lot of
+Lastly, in an attempt to stay ahead of potential system-destroying bugs, i stronly encourage people to reflect over what they read in the project, and open issues whenever they've found a potential bug, that needs to be taken into acountanse to ensure that processes won't break, and data won't corrupt when moving gpus
