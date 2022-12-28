@@ -16,7 +16,7 @@ I've devided the project up in folders, to try and make things a bit easier to n
 As this is a bleeding edge project, a lot of documentation, and a lot of code samples a going to be generated, by which only approx. 10% are likely to be used, so having a good archival structure has been important for me, to maintain transparency.
 The aim is to maintain as transparent as possible with what's going on, to allow people to, not only know where it's at, but also contribute to the project, and bring ideas, bug fixes, or just small tips on how you can do something smarter/easier/faster
 
-As this project is going to move memory around, and is most likely going to modify the kernel at some point, security should also be kept a high priority. Hince why i have 'Testers' 'Developmental-builds' and 'User-builds'. Anything not found in 'User-builds' are not tested proberly, and are likely to contain major security flaws that, if exploited, could lead to all sorts of issues like corruption, spying, etc.
+As this project is going to move memory around, and is most likely going to modify the kernel at some point, security should also be kept a high priority. Hince why i have 'testing-tools' 'Developmental-builds' and 'User-builds'. Anything not found in 'User-builds' are not tested proberly, and are likely to contain major security flaws that, if exploited, could lead to all sorts of issues like corruption, spying, etc.
 
 --------------------------------------------------------------------------------------
 

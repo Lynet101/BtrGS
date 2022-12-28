@@ -7,9 +7,9 @@ CALL=os.system
 
 class switch():
     def __init__(self):
-        self.dedix='/etc/X11.nvi /etc/X11'
-        self.intex='/etc/X11.inte /etc/X11'
-        self.hybx='/etc/X11.hyb /etc/X11'
+        self.dedix='[Path to dedicated x config] /etc/X11'
+        self.intex='[Path to integrated x config] /etc/X11'
+        self.hybx='[Path to hybrid x config (or integrated)] /etc/X11'
         self.x_dir='/etc/X11'
         self.rescan=f'echo 1 > /sys/bus/pci/rescan'
         self.driver_load='modprobe nvidia nvidia_uvm nvidia_drm nvidia_modeset'
