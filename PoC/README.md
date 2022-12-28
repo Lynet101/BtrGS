@@ -1,6 +1,3 @@
-During a dinner with my 'lovely' grandma, i came up with a proof of concept, to mainly proof to my self that 
-this might be possible
-
 The goal is simple: Create a program that can transfer a gif between GPUs.
 I mean, when broken down to it's basics, a gif can be looked at as a series of images. This means that if we render
 an image on a gpu, the GPU technically does nothing, until the next picture is displayed. This also means that the 
