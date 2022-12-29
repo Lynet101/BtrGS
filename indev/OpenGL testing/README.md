@@ -3,11 +3,11 @@ A few basic OpenGL test, to get experience with the API, and test how far i can 
 ----------------------------------------------------------------------------------
 ## Basic-tests with single-gpu-rendering:  
 I've been an AI-developer up untill this point, so my experience lie mainly with cuda. Unfortunately cuda is not really the tool to get the job done, when talking about graphical rendering accross multiple different vendors, so opengl it is!
-Only one tiny problem, I've never worked with opengl before, so this folder is me figuring out how that works (on a single gpu, baby steps people)
+Only one tiny problem, I've never worked with opengl before, so this folder is me figuring out how that works (on a single gpu, baby steps people, baby steps)
 
 
 ## Basic-tests with multi-gpu-rendering:  
-Once I've figured out how to draw a white rectagle, It's time to see if i can draw to simultaneously (I know, excitting!), but on different GPUs. By doing this I'll learn how to manage and interact with multiple GPUs which is pretty crucial for this project to work
+Once I've figured out how to draw a white rectagle, It's time two see if i can draw to simultaneously (I know, excitting!), but on different GPUs. By doing this I'll learn how to manage and interact with multiple GPUs which is pretty crucial for this project to work
 
 
 ## Basic-tests with multi-gpu-'cheaty'-switchable-rendering:  
