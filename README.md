@@ -7,6 +7,8 @@ This projects original intent is hybrid graphics systems on linux, but if succes
 
 That is IF it's succesfull. I've read a lot of documentation online, and been unable to find a similar project, meaning what this project tries to accomplish is brand new and revolutionary, but also that it's going to be difficult af.
 
+Not sure what's going on down below, but i can't seem to fix it.... It should just be regular text... hmm?
+
 I'm gonna try my very best to bring this idea to reallity, and i strongly believe, that with the help of this great community, we can atleast get part of the way there. However i just have to make this disclaimer: I'm a high school student, with knowledge and experience in coding. I've worked for larger international corporations before, where I've primarily developed reinforcement learning. Though I am in no way a 'professional', and don't have a lot of experience with graphics, outside of watching my gpu burn, while trying to train an ai. So don't expect miracles. Also, since I'm in highschool, I don't really have all the time in the world to look at this project. So from the beginning im gonna say; Given the complexity of the problem at hand, and given the current status of the team (that being a single, time constrained person) I won't make any promises for any releases. New documentation and releases will happen, whenever I've discovered something new, and had time to work with it proberly.  
 Also also... since I'm Danish, my grammar may not be spot on, english isn't my native language you know. But I'll try my best to in the very least be understandable
 ---------------------------------------------------------------------------------------
