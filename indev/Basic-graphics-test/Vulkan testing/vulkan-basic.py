@@ -1,5 +1,7 @@
 from config import *
 import instance
+import logging
+import device
 
 class Engine:
     
@@ -17,8 +19,17 @@ class Engine:
             print("Making a graphics engine")
         
         self.build_gflw_window()
-
         self.make_instance()
+        self.make_device()
+
+        """
+        self.make_debug_messenger()
+
+    def make_debug_messenger(self):
+        if self.debugMode:
+            print("Creating debug messenger")
+            self.debugMessenger = logging.make_debug_messenger(self.instance)
+            """
 
     def build_gflw_window(self):
 
@@ -42,11 +53,24 @@ class Engine:
     def make_instance(self):
         self.instance = instance.make_instance(self.debugMode, "ID tech 12")
 
+    def make_device(self):
+        self.physicalDevice = device.choose_physical_device(self.instance, self.debugMode)
+        self.device = []
+        self.graphicsQueue = []
+        for physicalDevice in self.physicalDevice:
+            dev_temp=device.create_logical_device(physicalDevice, self.debugMode)
+            self.device.append(dev_temp)
+            self.graphicsQueue.append(device.get_queue(physicalDevice, dev_temp, self.debugMode))
+        print(f'num of devices: {len(self.device)}')
+        print(f'num of graphics queues: {len(self.graphicsQueue)}')
+
     def close(self):
 
         if self.debugMode:
             print("Goodbye see you!\n")
 
+        for i in self.device:
+            vkDestroyDevice(device = i, pAllocator = None)
         vkDestroyInstance(self.instance, None)
 
 	    #terminate glfw

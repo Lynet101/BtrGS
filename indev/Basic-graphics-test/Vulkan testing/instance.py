@@ -1,7 +1,42 @@
 from config import *
 
-def make_instance(debug, applicationName):
+def supported(extensions, layers, debug):
+#Extensions
+    supported_extensions = [extension.extensionName for extension in vkEnumerateInstanceExtensionProperties(None)]
 
+    if debug:
+        print("Supported extensions:")
+        for extension in supported_extensions:
+            print(extension)
+        
+    for extension in extensions:
+        if extension in supported_extensions:
+            if debug:
+                print("Extension %s is supported" % extension)
+        else:
+            if debug:
+                print("Extension %s is not supported" % extension)
+            return False
+
+#Layers
+    supported_layers = [layer.layerName for layer in vkEnumerateInstanceLayerProperties()]
+
+    if debug:
+        print("Supported layers:")
+        for layer in supported_layers:
+            print(layer)
+    
+    for layer in layers:
+        if layer in supported_layers:
+            if debug:
+                print("Layer %s is supported" % layer)
+        else:
+            if debug:
+                print("Layer %s is not supported" % layer)
+            return False
+
+
+def make_instance(debug, applicationName):
     if debug:
         print("Creating instance")
 
@@ -27,16 +62,24 @@ def make_instance(debug, applicationName):
     
     extensions = glfw.get_required_instance_extensions()
 
+
+    if debug:
+        extensions.append(VK_EXT_DEBUG_REPORT_EXTENSION_NAME)
+
+
     if debug:
         print(f'extensions to be requested:')
 
         for ext in extensions:
             print(f'  {ext}')
     
+    layers = []
+
+    supported(extensions, layers, debug)
 
     createInfo = VkInstanceCreateInfo(
         pApplicationInfo = appInfo,
-        enabledLayerCount = 0, ppEnabledLayerNames = None,
+        enabledLayerCount = len(layers), ppEnabledLayerNames = None,
         enabledExtensionCount = len(extensions), ppEnabledExtensionNames = extensions
     )
 
@@ -48,4 +91,3 @@ def make_instance(debug, applicationName):
             print("Failed to create instance")
         return None
 
-    
