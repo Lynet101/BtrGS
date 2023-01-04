@@ -1,0 +1,9 @@
+- PCI-hotswap [Primarily MB-manufactored technology, but might become usefull)
+- Per-process GPU control
+- PCI drivers
+- PCI mem-transfer
+- Use CPU core as HS (HotSwap) daughterboard/controller
+- Copy framebuffer to Sys-RAM upon requested hotswap
+- ||the start will be 'requested hotswap', meaning you'll need to request to remove your pci-card (eg. gpu) before removal can happen
+- ||'Real hotswap' may become possible at some point, with surden devices, but would most likely never become possible with eg. GPUs as you would need to transfer frame-buffers and other essential data, before removal
+- ||and keeping an up-to-date update of this data, would simply not be practical speed-wize
