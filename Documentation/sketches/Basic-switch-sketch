@@ -1,5 +1,0 @@
-1. CPU sends data to GPU1 via GAPI (Graphic API)
-2. GPU1 does rendering, and sends data out back to CPU
-3. CPU stores data in ram
-4. when switch, process pauses, cpu transfer stored data to GPU2
-5. step 1-4 now repeats, whith GPU1 and 2 being reversed
