@@ -5,7 +5,7 @@
 
 >I could probably develop something exclusively for AMD and INTEL, but I'd rather develop for everyone at once... + I'm pretty sure more people would appreciate a stable nvidia driver, rather than this
 
-**---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------**
+**-----------------------------------------------------------------------------------------------------------------------------------------------------------**
 
 BtrGS is an attempt to unite different graphics concepts, to make GPU's more efficient, to benefit both end-users, data centers, and the environment
 
